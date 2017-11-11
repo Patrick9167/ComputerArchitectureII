@@ -43,5 +43,37 @@ p:
   ret r25, 0       ; return result in r1
   xor r0,r0,r0
 
-
+; result of gcd(a,b) in r1
+; a:r26, b:r27
+; pass parameters with registers r10-r15 to another function
 gcd:
+  sub r27, 0, r0{c} ; b == 0, {c} set condition flag
+  je retA           ; b == 0 => true
+  xor r0,r0,r0
+  add r26, r0, r10  ; a is 1st param for mod(a,b)
+  callr r25, mod    ; a % b in r1
+  add r27, r0, r11  ; b is 2nd param for mod(a,b) put after call for efficiency
+  add r27, r0, r10  ; b is 1st param for gcd
+  callr r25, gcd
+  add r1, r0, r11   ; result of (a%b/r1) is 2nd param for gcd
+  ret r25, 0        ; return result of gcd(b,a%b) in r1
+  xor r0,r0,r0
+retA:
+  add r26, r0, r1   ;
+  ret r25, 0        ; return a in r1
+  xor r0,r0,r0
+
+; result of a%b in r1
+; a:r26, b:r27
+mod:
+  add r0, 0, r1       ; set r1 = 0(to be incremented as result)
+check:
+  sub r27, r26, r0{c} ; a<b?
+  jge done
+  xor r0,r0,r0        ; true
+  add r0, 1, r1       ; r1++
+  sub r27, r26, r27   ; a -= b
+  jmp check           ; check a<b
+  xor r0,r0,r0
+done:
+  ret r25, 0        ; return modulo in r1
