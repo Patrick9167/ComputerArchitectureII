@@ -6,7 +6,9 @@
 ; Assume we have all normal jumps, have nop after every jump
 ; return address is stored in r25
 ; Instruction in delay slot is always executed whether the jump is made or not
-
+; when calling a jump the next line is also run,
+; therefore a nop is necessary as the next line as it is an instruction that does nothing
+; unless you would like that instruction to be run, then not necessary
 add r0, 4,r9 ; g=4
 
 min:
