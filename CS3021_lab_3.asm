@@ -1,4 +1,3 @@
-;;;; Results in rightmost register;;;;
 ;min:
 ; a:r26, b:r27, c:r28, v:r1 (as result returned in r1)
 ; Use r9 for g, global variable g: r9
@@ -47,7 +46,7 @@ p:
 ; a:r26, b:r27
 ; pass parameters with registers r10-r15 to another function
 gcd:
-  sub r27, 0, r0{c} ; b == 0, {c} set condition flag
+  sub r27, r0, r0{c} ; b == 0, {c} set condition flag
   je retA           ; b == 0 => true
   xor r0,r0,r0
   add r26, r0, r10  ; a is 1st param for mod(a,b)
@@ -63,17 +62,4 @@ retA:
   ret r25, 0        ; return a in r1
   xor r0,r0,r0
 
-; result of a%b in r1
-; a:r26, b:r27
-mod:
-  add r0, 0, r1       ; set r1 = 0(to be incremented as result)
-check:
-  sub r27, r26, r0{c} ; a<b?
-  jge done
-  xor r0,r0,r0        ; true
-  add r0, 1, r1       ; r1++
-  sub r27, r26, r27   ; a -= b
-  jmp check           ; check a<b
-  xor r0,r0,r0
-done:
-  ret r25, 0        ; return modulo in r1
+END
